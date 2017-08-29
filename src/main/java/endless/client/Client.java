@@ -15,7 +15,7 @@ public class Client {
         return clientChannel!=null && clientChannel.isActive();
     }
 
-    public void start(String host, int port){
+    public void start(String host, int port, ChannelInboundHandlerAdapter adapter){
         EventLoopGroup workgroup = new NioEventLoopGroup();
         try{
             bootstrap = new Bootstrap();
@@ -25,7 +25,7 @@ public class Client {
                     .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
-                            socketChannel.pipeline().addLast(new ClientHandler());
+                            socketChannel.pipeline().addLast(adapter);
                         }
                     });
             doConnect(host,port);
@@ -35,6 +35,10 @@ public class Client {
         finally {
             workgroup.shutdownGracefully();
         }
+    }
+
+    public void start(String host, int port){
+        start(host,port,new ClientHandler());
     }
 
     private void doConnect(String host, int port) throws InterruptedException{

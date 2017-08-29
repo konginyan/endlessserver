@@ -20,7 +20,6 @@ public class ServerHandler extends ChannelInboundHandlerAdapter{
         System.out.println("client "+ctx.channel().id()+" join server.");
         server.addChannel(ctx.channel());
         ctx.writeAndFlush(MessageUtil.String2ByteBuf(" connected success!"));
-        server.broadcast(ctx.name()+" connected success!");
     }
 
     @Override
